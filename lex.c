@@ -155,14 +155,27 @@ void freeLexTable(Lexeme table[]){
 }
 
 // Check if token is == 2 (identifier) or == 3 (number) then print value first then identifier/number, for the rest only print value
-void printTokenList(Lexeme table[]){ 
-    printf("Token List:\n\n");
+/* void printTokenList(Lexeme table[], FILE *out){ // Prints directly to terminal
+    //printf("Token List:\n\n");
 
     for(int i = 0; i < lexCount; i++){
-        printf("%d ", table[i].type);
+        fprintf("%d ", table[i].type);
 
         if(table[i].type == identsym || table[i].type == numbersym)
-            printf("%s ", table[i].lexeme);
+            fprintf("%s ", table[i].lexeme);
+    }
+
+    return;
+} */
+
+void printTokenList(Lexeme table[], FILE *out){ // Prints output to a file named "token_list.txt"
+    //printf("Token List:\n\n");
+
+    for(int i = 0; i < lexCount; i++){
+        fprintf(out, "%d ", table[i].type);
+
+        if(table[i].type == identsym || table[i].type == numbersym)
+            fprintf(out, "%s ", table[i].lexeme);
     }
 
     return;
@@ -367,12 +380,19 @@ int main(int argc, char *argv[]){
 
         line++;
     }
+    
+    // Write to output file
+    FILE *out;
+
+    out = fopen("token_list.txt", "w");
 
     printInputText(inputFile);
     printLexemeTable(lexTabel);
-    printTokenList(lexTabel);
+    printTokenList(lexTabel, out);
 
+    fclose(out);
+    
     clearInputText(inputFile);
     freeLexTable(lexTabel);
-
 }
+
